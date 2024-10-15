@@ -52,6 +52,7 @@ android {
 
 dependencies {
     implementation(project(":feature:notes"))
+    implementation(project(":design:resources"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

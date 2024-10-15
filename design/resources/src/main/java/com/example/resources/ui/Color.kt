@@ -1,4 +1,4 @@
-package com.example.shiftlab2024notesapp.ui.theme
+package com.example.resources.ui
 
 import androidx.compose.ui.graphics.Color
 
