@@ -1,7 +1,7 @@
 package com.example.shiftlab2024notesapp
 
 import android.app.Application
-import com.example.shiftlab2024notesapp.di.mainModule
+import com.example.shiftlab2024notesapp.navigation.navModule
 import com.example.shiftlab2024notesapp.notes.di.notesModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -17,8 +17,8 @@ class NotesApplication: Application() {
             androidLogger(level = Level.DEBUG)
             androidContext(this@NotesApplication)
             modules(
-                mainModule,
-                notesModule
+                notesModule,
+                navModule
             )
         }
     }
