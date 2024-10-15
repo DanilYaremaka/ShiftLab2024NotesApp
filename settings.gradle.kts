@@ -23,3 +23,4 @@ rootProject.name = "ShiftLab2024NotesApp"
 include(":app")
 include(":feature:notes")
 include(":design:resources")
+include(":shared")
