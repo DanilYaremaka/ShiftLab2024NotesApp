@@ -1,18 +1,34 @@
 package com.example.shiftlab2024notesapp.notes.ui
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.example.shiftlab2024notesapp.notes.presentation.NotesState
+import com.example.shiftlab2024notesapp.notes.presentation.NotesViewModel
+import com.example.shiftlab2024notesapp.shared.ui.ErrorComponent
+import com.example.shiftlab2024notesapp.shared.ui.LoadingComponent
 
 @Composable
 fun NotesScreen(
-    paddingValues: PaddingValues
+    viewModel: NotesViewModel
 ) {
-    Text(
-        modifier = Modifier.padding(paddingValues),
-        text = "Notes Screen feature"
-    )
+    val notesState by viewModel.state.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.loadNotes()
+    }
+
+    when (val state = notesState) {
+        is NotesState.Content -> ContentComponent(
+            notes = state.notes,
+            onItemSelected = {  }
+        )
+
+        is NotesState.Failure -> ErrorComponent(message = state.message) {
+            viewModel.reloadNotes()
+        }
+
+        NotesState.Initial, NotesState.Loading -> LoadingComponent()
+    }
 }

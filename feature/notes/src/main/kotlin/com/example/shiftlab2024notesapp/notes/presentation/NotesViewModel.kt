@@ -31,4 +31,9 @@ class NotesViewModel(
         }
     }
 
+    fun reloadNotes() {
+        _state.value = NotesState.Initial
+        loadNotes()
+    }
+
 }
