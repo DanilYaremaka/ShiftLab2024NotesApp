@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.devtoolsKsp)
 }
 
 android {
@@ -58,6 +59,13 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.kotlinx.coroutines.android)
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation (libs.androidx.runtime.livedata)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    annotationProcessor(libs.androidx.room.room.compiler)
+    ksp(libs.androidx.room.room.compiler)
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
