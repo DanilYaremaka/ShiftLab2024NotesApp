@@ -120,8 +120,6 @@ fun NotesListNotEmpty(
         ),
         verticalItemSpacing = 8.dp,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        //verticalArrangement = Arrangement.spacedBy(8.dp),
-        //reverseLayout = true
     ) {
         items(notes, { it.id.hashCode() }) { note ->
             val dismissBoxState = rememberSwipeToDismissBoxState(
