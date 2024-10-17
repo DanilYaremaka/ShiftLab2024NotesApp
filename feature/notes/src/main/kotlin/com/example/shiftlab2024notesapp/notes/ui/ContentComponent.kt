@@ -1,6 +1,5 @@
 package com.example.shiftlab2024notesapp.notes.ui
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -46,7 +45,7 @@ import com.example.shiftlab2024notesapp.shared.entity.Note
 @Composable
 fun ContentComponent(
     notes: List<Note>,
-    onItemSelected: (noteId: Int) -> Unit,
+    onItemSelected: (note: Note) -> Unit,
     onAddClicked: () -> Unit,
     swipedToDelete: (note: Note) -> Unit
 ) {
@@ -69,7 +68,6 @@ fun ContentComponent(
         },
         floatingActionButtonPosition = FabPosition.End
     ) { paddingValues ->
-        Log.d("ContentComponent", "${notes.size}\n$notes")
         if (notes.isNotEmpty())
             NotesListNotEmpty(
                 notes = notes,
@@ -103,7 +101,7 @@ fun NoteListEmpty(
 @Composable
 fun NotesListNotEmpty(
     notes: List<Note>,
-    onItemSelected: (noteId: Int) -> Unit,
+    onItemSelected: (note: Note) -> Unit,
     swipedToDelete: (note: Note) -> Unit,
     paddingValues: PaddingValues
 ) {
@@ -149,7 +147,7 @@ fun NotesListNotEmpty(
             ) {
                 NoteItem(
                     note = note,
-                    onItemSelected = { onItemSelected(note.id ?: -1) }
+                    onItemSelected = { onItemSelected(note) }
                 )
             }
         }

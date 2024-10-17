@@ -78,8 +78,8 @@ class NotesViewModel(
         _state.value = NotesState.Content(notes = oldList)
     }
 
-    fun openNote(noteId: Int) {
-        router.openEdit(noteId)
+    fun openNote(note: Note) {
+        router.openEdit(note)
     }
 
 }
