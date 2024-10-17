@@ -54,10 +54,8 @@ class NotesViewModel(
                 )
             } catch (ce: CancellationException) {
                 throw ce
-
             }
         }
-
     }
 
     fun deleteNote(note: Note) {

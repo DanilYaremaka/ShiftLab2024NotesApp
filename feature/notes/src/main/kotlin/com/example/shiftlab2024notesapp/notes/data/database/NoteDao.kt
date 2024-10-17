@@ -10,7 +10,7 @@ import com.example.shiftlab2024notesapp.shared.entity.Note
 @Dao
 interface NoteDao {
 
-    @Query("SELECT * FROM notes")
+    @Query("SELECT * FROM notes ORDER BY id desc")
     suspend fun getNotes(): List<Note>
 
     @Delete
