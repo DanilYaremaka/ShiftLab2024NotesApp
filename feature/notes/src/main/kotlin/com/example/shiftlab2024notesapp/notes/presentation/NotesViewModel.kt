@@ -44,6 +44,8 @@ class NotesViewModel(
     }
 
     fun addNote() {
+        val state = state.value
+        if (state !is NotesState.Content) return
         viewModelScope.launch {
             try {
                 addNoteUseCase(

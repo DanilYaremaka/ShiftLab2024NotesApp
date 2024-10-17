@@ -1,8 +1,10 @@
 package com.example.shiftlab2024notesapp.notes.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,55 +69,92 @@ fun ContentComponent(
         },
         floatingActionButtonPosition = FabPosition.End
     ) { paddingValues ->
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2) ,
+        Log.d("ContentComponent", "${notes.size}\n$notes")
+        if (notes.isNotEmpty())
+            NotesListNotEmpty(
+                notes = notes,
+                onItemSelected = onItemSelected,
+                swipedToDelete = swipedToDelete,
+                paddingValues = paddingValues
+            )
+        else NoteListEmpty(paddingValues = paddingValues)
+    }
+}
+
+@Composable
+fun NoteListEmpty(
+    paddingValues: PaddingValues
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
+        Text(
+            text = "Заметок пока что нет...",
             modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-            contentPadding = PaddingValues(
-                start = 12.dp,
-                top = 16.dp,
-                end = 12.dp,
-                bottom = 76.dp
-            ),
-            verticalItemSpacing = 8.dp,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            //verticalArrangement = Arrangement.spacedBy(8.dp),
-            //reverseLayout = true
-        ) {
-            items(notes, { it.hashCode() }) { note ->
-                val dismissBoxState = rememberSwipeToDismissBoxState(
-                    confirmValueChange = {
-                        when (it) {
-                            SwipeToDismissBoxValue.StartToEnd -> {
-                                return@rememberSwipeToDismissBoxState false
-                            }
+                .align(Alignment.Center),
+            textAlign = TextAlign.Center
+        )
+    }
+}
 
-                            SwipeToDismissBoxValue.EndToStart -> {
-                                swipedToDelete(note)
-                            }
-
-                            SwipeToDismissBoxValue.Settled -> {
-                                return@rememberSwipeToDismissBoxState false
-                            }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NotesListNotEmpty(
+    notes: List<Note>,
+    onItemSelected: (note: Note) -> Unit,
+    swipedToDelete: (note: Note) -> Unit,
+    paddingValues: PaddingValues
+) {
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(2) ,
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize(),
+        contentPadding = PaddingValues(
+            start = 12.dp,
+            top = 16.dp,
+            end = 12.dp,
+            bottom = 76.dp
+        ),
+        verticalItemSpacing = 8.dp,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        //verticalArrangement = Arrangement.spacedBy(8.dp),
+        //reverseLayout = true
+    ) {
+        items(notes, { it.id.hashCode() }) { note ->
+            val dismissBoxState = rememberSwipeToDismissBoxState(
+                confirmValueChange = {
+                    when (it) {
+                        SwipeToDismissBoxValue.StartToEnd -> {
+                            return@rememberSwipeToDismissBoxState false
                         }
-                        return@rememberSwipeToDismissBoxState true
-                    },
-                    positionalThreshold = { it * .50f }
-                )
-                SwipeToDismissBox(
-                    modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
-                    state = dismissBoxState,
-                    backgroundContent = { DismissBackground(dismissBoxState) },
-                    enableDismissFromStartToEnd = false
-                ) {
-                    NoteItem(
-                        note = note,
-                        onItemSelected = { onItemSelected(note) }
-                    )
-                }
 
+                        SwipeToDismissBoxValue.EndToStart -> {
+                            swipedToDelete(note)
+                        }
+
+                        SwipeToDismissBoxValue.Settled -> {
+                            return@rememberSwipeToDismissBoxState false
+                        }
+                    }
+                    return@rememberSwipeToDismissBoxState true
+                },
+                positionalThreshold = { it * .50f }
+            )
+            SwipeToDismissBox(
+                modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
+                state = dismissBoxState,
+                backgroundContent = { DismissBackground(dismissBoxState) },
+                enableDismissFromStartToEnd = false
+            ) {
+                NoteItem(
+                    note = note,
+                    onItemSelected = { onItemSelected(note) }
+                )
             }
+
         }
     }
 }
