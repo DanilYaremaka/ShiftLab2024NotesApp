@@ -24,4 +24,8 @@ val databaseModule = module {
         val db: NotesRoomDataBase = get()
         db.noteDao()
     }
+    single {
+        val db: NotesRoomDataBase = get()
+        db.editDao()
+    }
 }
