@@ -1,6 +1,7 @@
 package com.example.shiftlab2024notesapp
 
 import android.app.Application
+import com.example.shiftlab2024notesapp.database.databaseModule
 import com.example.shiftlab2024notesapp.navigation.navModule
 import com.example.shiftlab2024notesapp.notes.di.notesModule
 import org.koin.android.ext.koin.androidContext
@@ -18,7 +19,8 @@ class NotesApplication: Application() {
             androidContext(this@NotesApplication)
             modules(
                 notesModule,
-                navModule
+                navModule,
+                databaseModule
             )
         }
     }
