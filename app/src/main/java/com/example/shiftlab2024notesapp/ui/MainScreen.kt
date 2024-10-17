@@ -39,7 +39,7 @@ fun MainScreen() {
         composable<EditRoute> {
             val destination = it.toRoute<EditRoute>()
             EditScreen(
-                note = destination.note
+                id = destination.noteId
             )
         }
     }

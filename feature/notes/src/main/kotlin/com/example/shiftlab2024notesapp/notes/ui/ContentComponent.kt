@@ -46,7 +46,7 @@ import com.example.shiftlab2024notesapp.shared.entity.Note
 @Composable
 fun ContentComponent(
     notes: List<Note>,
-    onItemSelected: (note: Note) -> Unit,
+    onItemSelected: (noteId: Int) -> Unit,
     onAddClicked: () -> Unit,
     swipedToDelete: (note: Note) -> Unit
 ) {
@@ -103,7 +103,7 @@ fun NoteListEmpty(
 @Composable
 fun NotesListNotEmpty(
     notes: List<Note>,
-    onItemSelected: (note: Note) -> Unit,
+    onItemSelected: (noteId: Int) -> Unit,
     swipedToDelete: (note: Note) -> Unit,
     paddingValues: PaddingValues
 ) {
@@ -149,10 +149,9 @@ fun NotesListNotEmpty(
             ) {
                 NoteItem(
                     note = note,
-                    onItemSelected = { onItemSelected(note) }
+                    onItemSelected = { onItemSelected(note.id ?: -1) }
                 )
             }
-
         }
     }
 }
