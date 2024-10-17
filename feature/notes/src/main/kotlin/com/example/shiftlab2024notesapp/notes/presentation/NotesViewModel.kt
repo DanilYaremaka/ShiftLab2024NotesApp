@@ -45,20 +45,7 @@ class NotesViewModel(
     }
 
     fun addNote() {
-        val state = state.value
-        if (state !is NotesState.Content) return
-        viewModelScope.launch {
-            try {
-                addNoteUseCase(
-                    Note(
-                        title = "zametka",
-                        text = "text zametki"
-                    )
-                )
-            } catch (ce: CancellationException) {
-                throw ce
-            }
-        }
+        router.openEdit(Note())
     }
 
     fun deleteNote(note: Note) {
@@ -81,5 +68,4 @@ class NotesViewModel(
     fun openNote(note: Note) {
         router.openEdit(note)
     }
-
 }

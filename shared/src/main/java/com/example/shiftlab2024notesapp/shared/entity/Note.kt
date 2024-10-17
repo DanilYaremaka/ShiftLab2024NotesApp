@@ -16,6 +16,7 @@ data class Note(
     val title: String = "",
     val text: String = ""
 ) : Parcelable {
+
     companion object {
 
         val NavigationType: NavType<Note> = object : NavType<Note>(isNullableAllowed = false) {
