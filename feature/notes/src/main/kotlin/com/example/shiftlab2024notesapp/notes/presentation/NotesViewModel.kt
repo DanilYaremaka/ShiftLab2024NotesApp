@@ -14,7 +14,8 @@ import kotlinx.coroutines.launch
 class NotesViewModel(
     private val getNotesUseCase: GetNotesUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
-    private val addNoteUseCase: AddNoteUseCase
+    private val addNoteUseCase: AddNoteUseCase,
+    private val router: NoteRouter
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<NotesState>(NotesState.Initial)
@@ -75,6 +76,10 @@ class NotesViewModel(
         val oldList = state.notes.toMutableList()
         oldList.remove(note)
         _state.value = NotesState.Content(notes = oldList)
+    }
+
+    fun openNote(note: Note) {
+        router.openEdit(note)
     }
 
 }

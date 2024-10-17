@@ -1,11 +1,9 @@
 package com.example.shiftlab2024notesapp.shared.entity
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
-@Entity(tableName = "notes")
+@Serializable
 data class Note(
-    @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
     val title: String = "",
     val text: String = ""

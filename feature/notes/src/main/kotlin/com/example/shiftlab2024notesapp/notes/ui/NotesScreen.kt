@@ -22,7 +22,7 @@ fun NotesScreen(
     when (val state = notesState) {
         is NotesState.Content -> ContentComponent(
             notes = state.notes,
-            onItemSelected = { },
+            onItemSelected = viewModel::openNote,
             onAddClicked = { viewModel.addNote() },
             swipedToDelete = viewModel::deleteNote,
         )
