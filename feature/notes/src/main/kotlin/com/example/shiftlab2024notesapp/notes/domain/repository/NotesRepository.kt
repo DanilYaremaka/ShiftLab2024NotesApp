@@ -1,8 +1,12 @@
 package com.example.shiftlab2024notesapp.notes.domain.repository
 
-import com.example.shiftlab2024notesapp.notes.domain.entity.Note
+import com.example.shiftlab2024notesapp.shared.entity.Note
 
 interface NotesRepository {
 
-    fun getNotes(): List<Note>
+    suspend fun getNotes(): List<Note>
+
+    suspend fun deleteNote(note: Note)
+
+    suspend fun addNote(note: Note)
 }
