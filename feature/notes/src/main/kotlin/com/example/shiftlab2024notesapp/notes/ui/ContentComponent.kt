@@ -155,7 +155,7 @@ fun NoteItem(
     ) {
         Text(
             modifier = Modifier.padding(8.dp),
-            text = note.title ?: "",
+            text = note.title,
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
             maxLines = 1,
@@ -167,7 +167,7 @@ fun NoteItem(
                 end = 8.dp,
                 bottom = 8.dp
             ),
-            text = note.text ?: "",
+            text = note.text,
             fontSize = 16.sp,
             maxLines = 4
         )
