@@ -2,6 +2,8 @@ package com.example.shiftlab2024notesapp.notes.di
 
 import com.example.shiftlab2024notesapp.notes.data.repository.NotesRepositoryImpl
 import com.example.shiftlab2024notesapp.notes.domain.repository.NotesRepository
+import com.example.shiftlab2024notesapp.notes.domain.usecase.AddNoteUseCase
+import com.example.shiftlab2024notesapp.notes.domain.usecase.DeleteNoteUseCase
 import com.example.shiftlab2024notesapp.notes.domain.usecase.GetNotesUseCase
 import com.example.shiftlab2024notesapp.notes.presentation.NotesViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -15,6 +17,8 @@ val notesModule = module {
     singleOf(::NotesRepositoryImpl) bind NotesRepository::class
 
     factoryOf(::GetNotesUseCase)
+    factoryOf(::DeleteNoteUseCase)
+    factoryOf(::AddNoteUseCase)
 
     viewModelOf(::NotesViewModel)
 }
