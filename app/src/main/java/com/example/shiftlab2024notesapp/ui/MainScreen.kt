@@ -14,6 +14,7 @@ import com.example.shiftlab2024notesapp.notes.ui.NotesScreen
 import com.example.shiftlab2024notesapp.shared.entity.Note
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
+import org.koin.core.parameter.parametersOf
 import kotlin.reflect.typeOf
 
 @Composable
@@ -45,7 +46,7 @@ fun MainScreen() {
         ) {
             val destination = it.toRoute<EditRoute>()
             EditScreen(
-                note = destination.note
+                viewModel = koinViewModel { parametersOf(destination.note) }
             )
         }
     }

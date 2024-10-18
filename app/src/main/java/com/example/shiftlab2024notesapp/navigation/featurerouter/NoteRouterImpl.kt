@@ -9,7 +9,11 @@ class NoteRouterImpl(
     private val router: GlobalRouter
 ): NoteRouter {
 
-    override fun openEdit(note: Note) {
-        router.open(EditRoute(note))
+    override fun openNote(note: Note) {
+        router.openWithSavingState(EditRoute(note))
+    }
+
+    override fun openNewNote() {
+        router.openWithSaveAndRestoreState(EditRoute(Note()))
     }
 }

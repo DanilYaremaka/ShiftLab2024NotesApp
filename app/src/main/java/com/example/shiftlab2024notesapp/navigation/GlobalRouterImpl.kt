@@ -6,11 +6,22 @@ class GlobalRouterImpl: GlobalRouter, NavControllerHolder {
 
     private var navController: NavController? = null
 
-    override fun open(route: Any) {
+    override fun openWithSavingState(route: Any) {
+        //val navController = navController?: return
         navController?.navigate(route)
     }
 
-    override fun openPoppingAllPrevious(route: Any) {
+    override fun openWithRestoreState(route: Any) {
+        val navController = navController?: return
+        navController.navigate(route) {
+            popUpTo(navController.graph.startDestinationId) {
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+
+    override fun openWithSaveAndRestoreState(route: Any) {
         val navController = navController?: return
         navController.navigate(route) {
             popUpTo(navController.graph.startDestinationId) {
