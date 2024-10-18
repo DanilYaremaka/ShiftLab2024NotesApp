@@ -20,7 +20,4 @@ class NotesRepositoryImpl(
         noteDao.deleteNote(converter.convertToDTO(note))
     }
 
-    override suspend fun addNote(note: Note) {
-        noteDao.addNote(converter.convertToDTO(note))
-    }
 }

@@ -1,17 +1,41 @@
 package com.example.shiftlab2024notesapp.edit.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import com.example.shiftlab2024notesapp.shared.entity.Note
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.example.shiftlab2024notesapp.edit.presentation.EditState
+import com.example.shiftlab2024notesapp.edit.presentation.EditViewModel
+import com.example.shiftlab2024notesapp.shared.ui.ErrorComponent
+import com.example.shiftlab2024notesapp.shared.ui.LoadingComponent
 
 @Composable
 fun EditScreen(
-    note: Note
+    viewModel: EditViewModel
 ) {
-    Column {
-        TextField(value = note.title, onValueChange = {})
-        TextField(value = note.text, onValueChange = {})
-        TextField(value = note.id.toString(), onValueChange = {})
+
+    val editState by viewModel.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.showNote()
+    }
+
+    when (val state = editState) {
+        is EditState.Content -> {
+            ContentComponent(
+                note = state.note,
+                onTitleChanged = viewModel::changeTitle,
+                onTextChanged = viewModel::changeText,
+                onSaveClicked = viewModel::insertNote,
+                onBackClicked = viewModel::closeDraft
+            )
+        }
+
+        is EditState.Failure -> ErrorComponent(
+            message = state.message,
+            onRetry = {viewModel.insertNote()}
+        )
+
+        EditState.Initial, EditState.Loading -> LoadingComponent()
     }
 }

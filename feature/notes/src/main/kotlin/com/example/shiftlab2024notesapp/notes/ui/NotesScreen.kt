@@ -23,13 +23,14 @@ fun NotesScreen(
         is NotesState.Content -> ContentComponent(
             notes = state.notes,
             onItemSelected = viewModel::openNote,
-            onAddClicked = { viewModel.addNote() },
+            onAddClicked = { viewModel.openNote(null) },
             swipedToDelete = viewModel::deleteNote,
         )
 
-        is NotesState.Failure -> ErrorComponent(message = state.message) {
-            viewModel.reloadNotes()
-        }
+        is NotesState.Failure -> ErrorComponent(
+            message = state.message,
+            onRetry = { viewModel.reloadNotes() }
+        )
 
         NotesState.Initial, NotesState.Loading -> LoadingComponent()
     }

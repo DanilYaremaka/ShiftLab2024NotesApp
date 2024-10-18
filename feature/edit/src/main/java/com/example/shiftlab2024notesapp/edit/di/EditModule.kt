@@ -4,7 +4,8 @@ import com.example.shiftlab2024notesapp.edit.data.repository.EditRepositoryImpl
 import com.example.shiftlab2024notesapp.edit.domain.repository.EditRepository
 import com.example.shiftlab2024notesapp.edit.domain.usecase.InsertNoteUseCase
 import com.example.shiftlab2024notesapp.edit.presentation.EditViewModel
-import org.koin.androidx.viewmodel.dsl.viewModelOf
+import com.example.shiftlab2024notesapp.shared.entity.Note
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -16,5 +17,11 @@ val editModule = module {
 
     factoryOf(::InsertNoteUseCase)
 
-    viewModelOf(::EditViewModel)
+    viewModel {(note: Note) ->
+        EditViewModel(
+            note = note,
+            insertNoteUseCase = get(),
+            router = get()
+        )
+    }
 }

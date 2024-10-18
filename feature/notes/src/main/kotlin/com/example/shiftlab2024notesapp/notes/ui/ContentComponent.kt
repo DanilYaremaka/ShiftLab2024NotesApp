@@ -12,8 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -50,7 +51,6 @@ fun ContentComponent(
     swipedToDelete: (note: Note) -> Unit
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.notes_title)) },
@@ -63,7 +63,7 @@ fun ContentComponent(
             Button(
                 onClick = onAddClicked,
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                Icon(imageVector = Icons.Default.Create, contentDescription = null)
             }
         },
         floatingActionButtonPosition = FabPosition.End
@@ -105,6 +105,7 @@ fun NotesListNotEmpty(
     swipedToDelete: (note: Note) -> Unit,
     paddingValues: PaddingValues
 ) {
+    val scrollState = rememberLazyStaggeredGridState()
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2) ,
         modifier = Modifier
@@ -118,6 +119,7 @@ fun NotesListNotEmpty(
         ),
         verticalItemSpacing = 8.dp,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
+        state = scrollState
     ) {
         items(notes, { it.id.hashCode() }) { note ->
             val dismissBoxState = rememberSwipeToDismissBoxState(
