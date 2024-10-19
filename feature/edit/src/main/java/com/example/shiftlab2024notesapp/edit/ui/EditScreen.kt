@@ -36,6 +36,6 @@ fun EditScreen(
             onRetry = {viewModel.insertNote()}
         )
 
-        EditState.Initial, EditState.Loading -> LoadingComponent()
+        EditState.Initial -> LoadingComponent()
     }
 }

@@ -33,9 +33,7 @@ class EditViewModel(
     }
 
     fun showNote() {
-        if (state.value is EditState.Loading) {
-            return
-        }
+
         _state.value = EditState.Content(note.copy(title = title.value, text = text.value))
     }
 

@@ -16,7 +16,7 @@ fun NotesScreen(
     val notesState by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.loadNotes()
+        viewModel.getNotes()
     }
 
     when (val state = notesState) {

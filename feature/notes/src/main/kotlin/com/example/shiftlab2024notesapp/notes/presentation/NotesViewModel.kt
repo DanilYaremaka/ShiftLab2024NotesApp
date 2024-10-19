@@ -22,10 +22,20 @@ class NotesViewModel(
 
     private val notes = mutableStateOf<List<Note>>(emptyList())
 
-    fun loadNotes() {
+    init {
+        loadNotes()
+    }
+
+    private fun loadNotes() {
         if (_state.value is NotesState.Content || _state.value is NotesState.Loading)
             return
 
+        _state.value = NotesState.Loading
+
+        getNotes()
+    }
+
+    fun getNotes() {
         viewModelScope.launch {
             try {
                 notes.value = getNotesUseCase()
@@ -37,6 +47,7 @@ class NotesViewModel(
             }
         }
     }
+
 
     fun reloadNotes() {
         _state.value = NotesState.Initial
@@ -64,6 +75,5 @@ class NotesViewModel(
             router.openNote(note)
         else
             router.openNewNote()
-        _state.value = NotesState.Initial
     }
 }
