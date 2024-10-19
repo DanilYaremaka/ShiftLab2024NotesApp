@@ -14,11 +14,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
+import com.example.shiftlab2024notesapp.edit.R
 import com.example.shiftlab2024notesapp.shared.entity.Note
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,6 +58,7 @@ fun ContentComponent(
         }
 
     ) { paddingValues ->
+        val charCount = note.text.length
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -65,6 +69,12 @@ fun ContentComponent(
                 onValueChange = onTitleChanged,
                 modifier = Modifier.fillMaxWidth(),
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = pluralStringResource(
+                id = R.plurals.chars_count,
+                count = charCount,
+                charCount
+            ))
             Spacer(modifier = Modifier.height(8.dp))
             TextField(
                 value = note.text,
