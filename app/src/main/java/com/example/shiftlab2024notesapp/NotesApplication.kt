@@ -2,12 +2,11 @@ package com.example.shiftlab2024notesapp
 
 import android.app.Application
 import com.example.shiftlab2024notesapp.database.databaseModule
+import com.example.shiftlab2024notesapp.edit.di.editModule
 import com.example.shiftlab2024notesapp.navigation.navModule
 import com.example.shiftlab2024notesapp.notes.di.notesModule
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import org.koin.core.logger.Level
 
 class NotesApplication: Application() {
 
@@ -15,12 +14,12 @@ class NotesApplication: Application() {
         super.onCreate()
 
         startKoin {
-            androidLogger(level = Level.DEBUG)
             androidContext(this@NotesApplication)
             modules(
                 notesModule,
                 navModule,
-                databaseModule
+                databaseModule,
+                editModule
             )
         }
     }

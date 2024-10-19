@@ -53,6 +53,7 @@ android {
 
 dependencies {
     implementation(project(":feature:notes"))
+    implementation(project(":feature:edit"))
     implementation(project(":design:resources"))
     implementation(project(":shared"))
 

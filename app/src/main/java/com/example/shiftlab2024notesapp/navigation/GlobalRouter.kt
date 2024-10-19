@@ -2,9 +2,11 @@ package com.example.shiftlab2024notesapp.navigation
 
 interface GlobalRouter {
 
-    fun open(route: Any)
+    fun openWithSavingState(route: Any)
 
-    fun openPoppingAllPrevious(route: Any)
+    fun openWithRestoreState(route: Any)
+
+    fun openWithSaveAndRestoreState(route: Any)
 
     fun pop()
 }

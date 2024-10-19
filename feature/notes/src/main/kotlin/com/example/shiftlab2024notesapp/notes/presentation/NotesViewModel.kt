@@ -1,8 +1,8 @@
 package com.example.shiftlab2024notesapp.notes.presentation
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shiftlab2024notesapp.notes.domain.usecase.AddNoteUseCase
 import com.example.shiftlab2024notesapp.notes.domain.usecase.DeleteNoteUseCase
 import com.example.shiftlab2024notesapp.notes.domain.usecase.GetNotesUseCase
 import com.example.shiftlab2024notesapp.shared.entity.Note
@@ -14,22 +14,32 @@ import kotlinx.coroutines.launch
 class NotesViewModel(
     private val getNotesUseCase: GetNotesUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
-    private val addNoteUseCase: AddNoteUseCase
+    private val router: NoteRouter
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<NotesState>(NotesState.Initial)
     val state: StateFlow<NotesState> = _state
 
-    private lateinit var notes: MutableList<Note>
+    private val notes = mutableStateOf<List<Note>>(emptyList())
 
-    fun loadNotes() {
+    init {
+        loadNotes()
+    }
+
+    private fun loadNotes() {
         if (_state.value is NotesState.Content || _state.value is NotesState.Loading)
             return
 
+        _state.value = NotesState.Loading
+
+        getNotes()
+    }
+
+    fun getNotes() {
         viewModelScope.launch {
             try {
-                notes = getNotesUseCase().toMutableList()
-                _state.value = NotesState.Content(notes)
+                notes.value = getNotesUseCase()
+                _state.value = NotesState.Content(notes.value)
             } catch (ce: CancellationException) {
                 throw ce
             } catch (ex: Exception) {
@@ -38,24 +48,10 @@ class NotesViewModel(
         }
     }
 
+
     fun reloadNotes() {
         _state.value = NotesState.Initial
         loadNotes()
-    }
-
-    fun addNote() {
-        viewModelScope.launch {
-            try {
-                addNoteUseCase(
-                    Note(
-                        title = "zametka",
-                        text = "text zametki"
-                    )
-                )
-            } catch (ce: CancellationException) {
-                throw ce
-            }
-        }
     }
 
     fun deleteNote(note: Note) {
@@ -67,7 +63,6 @@ class NotesViewModel(
                 deleteNoteUseCase(note)
             } catch (ce: CancellationException) {
                 throw ce
-
             }
         }
         val oldList = state.notes.toMutableList()
@@ -75,4 +70,10 @@ class NotesViewModel(
         _state.value = NotesState.Content(notes = oldList)
     }
 
+    fun openNote(note: Note?) {
+        if (note != null)
+            router.openNote(note)
+        else
+            router.openNewNote()
+    }
 }

@@ -16,20 +16,21 @@ fun NotesScreen(
     val notesState by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.loadNotes()
+        viewModel.getNotes()
     }
 
     when (val state = notesState) {
         is NotesState.Content -> ContentComponent(
             notes = state.notes,
-            onItemSelected = { },
-            onAddClicked = { viewModel.addNote() },
+            onItemSelected = viewModel::openNote,
+            onAddClicked = { viewModel.openNote(null) },
             swipedToDelete = viewModel::deleteNote,
         )
 
-        is NotesState.Failure -> ErrorComponent(message = state.message) {
-            viewModel.reloadNotes()
-        }
+        is NotesState.Failure -> ErrorComponent(
+            message = state.message,
+            onRetry = { viewModel.reloadNotes() }
+        )
 
         NotesState.Initial, NotesState.Loading -> LoadingComponent()
     }

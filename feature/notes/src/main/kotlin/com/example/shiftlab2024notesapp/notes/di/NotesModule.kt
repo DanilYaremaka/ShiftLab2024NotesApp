@@ -2,7 +2,6 @@ package com.example.shiftlab2024notesapp.notes.di
 
 import com.example.shiftlab2024notesapp.notes.data.repository.NotesRepositoryImpl
 import com.example.shiftlab2024notesapp.notes.domain.repository.NotesRepository
-import com.example.shiftlab2024notesapp.notes.domain.usecase.AddNoteUseCase
 import com.example.shiftlab2024notesapp.notes.domain.usecase.DeleteNoteUseCase
 import com.example.shiftlab2024notesapp.notes.domain.usecase.GetNotesUseCase
 import com.example.shiftlab2024notesapp.notes.presentation.NotesViewModel
@@ -18,7 +17,6 @@ val notesModule = module {
 
     factoryOf(::GetNotesUseCase)
     factoryOf(::DeleteNoteUseCase)
-    factoryOf(::AddNoteUseCase)
 
     viewModelOf(::NotesViewModel)
 }
