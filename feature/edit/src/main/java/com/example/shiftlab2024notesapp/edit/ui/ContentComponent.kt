@@ -15,9 +15,9 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -105,7 +105,7 @@ fun NoteTitle(
     noteTitle: String,
     onTitleChanged: (String) -> Unit
 ) {
-    TextField(
+    OutlinedTextField(
         value = noteTitle,
         onValueChange = onTitleChanged,
         modifier = Modifier
@@ -142,7 +142,7 @@ fun NoteText(
     noteText: String,
     onTextChanged: (String) -> Unit
 ) {
-    TextField(
+    OutlinedTextField(
         value = noteText,
         onValueChange = onTextChanged,
         modifier = Modifier

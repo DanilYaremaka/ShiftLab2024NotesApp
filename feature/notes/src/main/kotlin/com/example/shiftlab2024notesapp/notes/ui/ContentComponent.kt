@@ -1,13 +1,17 @@
 package com.example.shiftlab2024notesapp.notes.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -24,6 +28,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxState
@@ -32,9 +37,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -52,8 +59,12 @@ fun ContentComponent(
     onAddClicked: () -> Unit,
     swipedToDelete: (note: Note) -> Unit,
     isShowFavourite: Boolean,
-    onShowFavouriteClicked: () -> Unit
+    onShowFavouriteClicked: () -> Unit,
+    searchQuery: String,
+    searchQueryChanged: (String) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -78,32 +89,59 @@ fun ContentComponent(
         },
         floatingActionButtonPosition = FabPosition.End
     ) { paddingValues ->
-        if (notes.isNotEmpty())
-            NotesListNotEmpty(
-                notes = notes,
-                onItemSelected = onItemSelected,
-                swipedToDelete = swipedToDelete,
-                paddingValues = paddingValues
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = searchQueryChanged,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp),
+                placeholder = {
+                    Text(text = stringResource(R.string.search_hint))
+                }
             )
-        else NoteListEmpty(paddingValues = paddingValues)
+
+            if (notes.isNotEmpty())
+                NotesListNotEmpty(
+                    notes = notes,
+                    onItemSelected = onItemSelected,
+                    swipedToDelete = swipedToDelete,
+                )
+            else NoteListEmpty()
+        }
+
     }
 }
 
 @Composable
 fun NoteListEmpty(
-    paddingValues: PaddingValues
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues)
     ) {
-        Text(
-            text = "Заметок пока что нет...",
+        Column(
             modifier = Modifier
-                .align(Alignment.Center),
-            textAlign = TextAlign.Center
-        )
+                .align(Alignment.Center)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(painter = painterResource(
+                id = R.drawable.notes_icon_256),
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(R.string.notes_is_empty),
+                textAlign = TextAlign.Center
+            )
+        }
+
     }
 }
 
@@ -113,13 +151,12 @@ fun NotesListNotEmpty(
     notes: List<Note>,
     onItemSelected: (note: Note) -> Unit,
     swipedToDelete: (note: Note) -> Unit,
-    paddingValues: PaddingValues
 ) {
     val scrollState = rememberLazyStaggeredGridState()
+
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2) ,
         modifier = Modifier
-            .padding(paddingValues)
             .fillMaxSize(),
         contentPadding = PaddingValues(
             start = 12.dp,
