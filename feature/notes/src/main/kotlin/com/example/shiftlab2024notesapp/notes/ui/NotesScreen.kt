@@ -25,6 +25,8 @@ fun NotesScreen(
             onItemSelected = viewModel::openNote,
             onAddClicked = { viewModel.openNote(null) },
             swipedToDelete = viewModel::deleteNote,
+            isShowFavourite = state.isShowFavourite,
+            onShowFavouriteClicked = viewModel::changeShowFavouriteState
         )
 
         is NotesState.Failure -> ErrorComponent(

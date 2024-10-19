@@ -21,9 +21,22 @@ class NotesViewModel(
     val state: StateFlow<NotesState> = _state
 
     private val notes = mutableStateOf<List<Note>>(emptyList())
+    private val isShowFavourite = mutableStateOf(false)
 
     init {
         loadNotes()
+    }
+
+    fun changeShowFavouriteState() {
+        isShowFavourite.value = !isShowFavourite.value
+        getNotes()
+    }
+
+    private fun getList(): List<Note> {
+
+        return if (isShowFavourite.value) notes.value.filter {
+            it.isFavourite
+        } else notes.value
     }
 
     private fun loadNotes() {
@@ -39,7 +52,7 @@ class NotesViewModel(
         viewModelScope.launch {
             try {
                 notes.value = getNotesUseCase()
-                _state.value = NotesState.Content(notes.value)
+                _state.value = NotesState.Content(getList(), isShowFavourite.value)
             } catch (ce: CancellationException) {
                 throw ce
             } catch (ex: Exception) {
@@ -67,7 +80,7 @@ class NotesViewModel(
         }
         val oldList = state.notes.toMutableList()
         oldList.remove(note)
-        _state.value = NotesState.Content(notes = oldList)
+        _state.value = NotesState.Content(notes = oldList, isShowFavourite.value)
     }
 
     fun openNote(note: Note?) {

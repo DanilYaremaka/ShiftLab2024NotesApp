@@ -16,12 +16,14 @@ import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridS
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxState
@@ -48,14 +50,22 @@ fun ContentComponent(
     notes: List<Note>,
     onItemSelected: (note: Note) -> Unit,
     onAddClicked: () -> Unit,
-    swipedToDelete: (note: Note) -> Unit
+    swipedToDelete: (note: Note) -> Unit,
+    isShowFavourite: Boolean,
+    onShowFavouriteClicked: () -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.notes_title)) },
                 actions = {
-                    Icon(imageVector = Icons.Default.Search, contentDescription = null)
+                    IconButton(onClick = { onShowFavouriteClicked() }) {
+                        Icon(
+                            imageVector = if (isShowFavourite) Icons.Filled.Favorite
+                            else Icons.Outlined.FavoriteBorder,
+                            contentDescription = null
+                        )
+                    }
                 }
             )
         },
