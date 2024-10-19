@@ -6,4 +6,6 @@
         <item quantity="many">%1$d символов</item>
         <item quantity="other">%1$d символов</item>
     </plurals>
+    <string name="title_hint">Заголовок</string>
+    <string name="text">Введите текст заметки</string>
 </resources>

@@ -21,9 +21,15 @@ class EditViewModel(
 
     private val title = mutableStateOf(note.title)
     private val text = mutableStateOf(note.text)
+    private val isFavourite = mutableStateOf(note.isFavourite)
 
     fun changeTitle(value: String) {
         title.value = value
+        showNote()
+    }
+
+    fun changeFavouriteState() {
+        isFavourite.value = !isFavourite.value
         showNote()
     }
 
@@ -33,8 +39,11 @@ class EditViewModel(
     }
 
     fun showNote() {
-
-        _state.value = EditState.Content(note.copy(title = title.value, text = text.value))
+        _state.value = EditState.Content(note.copy(
+            title = title.value,
+            text = text.value,
+            isFavourite = isFavourite.value
+        ))
     }
 
     fun insertNote() {
@@ -47,7 +56,8 @@ class EditViewModel(
             try {
                 insertNoteUseCase(note.copy(
                     text = text.value,
-                    title = title.value
+                    title = title.value,
+                    isFavourite = isFavourite.value
                 ))
                 closeNote()
             } catch (ce: CancellationException) {

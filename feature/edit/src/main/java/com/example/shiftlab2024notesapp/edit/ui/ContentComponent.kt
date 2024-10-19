@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.Done
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,7 +22,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.shiftlab2024notesapp.edit.R
 import com.example.shiftlab2024notesapp.shared.entity.Note
 
@@ -31,13 +37,14 @@ fun ContentComponent(
     onTitleChanged: (String) -> Unit,
     onTextChanged: (String) -> Unit,
     onSaveClicked: () -> Unit,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    onFavouriteClicked: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier,
         topBar = {
             TopAppBar(
-                title = { /*TODO*/ },
+                title = { },
                 navigationIcon = {
                     IconButton(onClick = { onBackClicked() }) {
                         Icon(
@@ -47,9 +54,16 @@ fun ContentComponent(
                     }
                 },
                 actions = {
+                    IconButton(onClick = { onFavouriteClicked() }) {
+                        Icon(
+                            imageVector = if (note.isFavourite) Icons.Filled.Favorite
+                            else Icons.Outlined.FavoriteBorder,
+                            contentDescription = null
+                        )
+                    }
                     IconButton(onClick = { onSaveClicked() }) {
                         Icon(
-                            imageVector = Icons.Outlined.Done,
+                            imageVector = Icons.Default.Done,
                             contentDescription = null
                         )
                     }
@@ -58,28 +72,25 @@ fun ContentComponent(
         }
 
     ) { paddingValues ->
-        val charCount = note.text.length
+
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            TextField(
-                value = note.title,
-                onValueChange = onTitleChanged,
-                modifier = Modifier.fillMaxWidth(),
+
+            NoteTitle(
+                noteTitle = note.title,
+                onTitleChanged = onTitleChanged
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = pluralStringResource(
-                id = R.plurals.chars_count,
-                count = charCount,
-                charCount
-            ))
+
+            NoteInfo(charCount = note.text.length)
+
             Spacer(modifier = Modifier.height(8.dp))
-            TextField(
-                value = note.text,
-                onValueChange = onTextChanged,
-                modifier = Modifier.fillMaxSize()
+            NoteText(
+                noteText = note.text,
+                onTextChanged = onTextChanged
             )
         }
     }
@@ -87,4 +98,61 @@ fun ContentComponent(
     BackHandler {
         onBackClicked()
     }
+}
+
+@Composable
+fun NoteTitle(
+    noteTitle: String,
+    onTitleChanged: (String) -> Unit
+) {
+    TextField(
+        value = noteTitle,
+        onValueChange = onTitleChanged,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 8.dp, end = 8.dp, top = 16.dp),
+        placeholder = {
+            Text(text = stringResource(R.string.title_hint))
+        },
+        textStyle = TextStyle(
+            fontSize = 24.sp,
+            fontWeight = FontWeight.SemiBold
+        )
+    )
+}
+
+@Composable
+fun NoteInfo(charCount: Int) {
+    Text(
+        text = pluralStringResource(
+            id = R.plurals.chars_count,
+            count = charCount,
+            charCount
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp),
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Light
+    )
+}
+
+@Composable
+fun NoteText(
+    noteText: String,
+    onTextChanged: (String) -> Unit
+) {
+    TextField(
+        value = noteText,
+        onValueChange = onTextChanged,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 8.dp, end = 8.dp),
+        placeholder = {
+            Text(text = stringResource(R.string.text))
+        },
+        textStyle = TextStyle(
+            fontWeight = FontWeight.Normal
+        )
+    )
 }

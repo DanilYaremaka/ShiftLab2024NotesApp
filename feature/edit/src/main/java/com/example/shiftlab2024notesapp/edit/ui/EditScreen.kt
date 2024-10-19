@@ -27,7 +27,8 @@ fun EditScreen(
                 onTitleChanged = viewModel::changeTitle,
                 onTextChanged = viewModel::changeText,
                 onSaveClicked = viewModel::insertNote,
-                onBackClicked = viewModel::closeDraft
+                onBackClicked = viewModel::closeDraft,
+                onFavouriteClicked = viewModel::changeFavouriteState
             )
         }
 

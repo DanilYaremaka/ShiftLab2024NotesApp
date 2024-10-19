@@ -8,5 +8,6 @@ data class NoteDTO(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
     val title: String = "",
-    val text: String = ""
+    val text: String = "",
+    val isFavourite: Boolean = false
 )
