@@ -2,5 +2,5 @@
 <resources>
     <string name="notes_title">Все заметки</string>
     <string name="search_hint">Поиск по заметкам</string>
-    <string name="notes_is_empty">Заметок пока что нет...</string>
+    <string name="notes_is_empty">Заметок пока что нет&#8230;</string>
 </resources>
