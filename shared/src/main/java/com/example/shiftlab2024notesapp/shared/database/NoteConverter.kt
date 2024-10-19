@@ -7,12 +7,14 @@ class NoteConverter {
     fun convertToEntity(noteDTO: NoteDTO) = Note(
         id = noteDTO.id,
         title = noteDTO.title,
-        text = noteDTO.text
+        text = noteDTO.text,
+        isFavourite = noteDTO.isFavourite
     )
 
     fun convertToDTO(note: Note) = NoteDTO(
         id = note.id,
         title = note.title,
-        text = note.text
+        text = note.text,
+        isFavourite = note.isFavourite
     )
 }
