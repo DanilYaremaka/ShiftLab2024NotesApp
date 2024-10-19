@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
@@ -101,6 +102,11 @@ fun ContentComponent(
                     .padding(start = 16.dp, end = 16.dp),
                 placeholder = {
                     Text(text = stringResource(R.string.search_hint))
+                },
+                trailingIcon = {
+                    IconButton(onClick = { searchQueryChanged("") }) {
+                        Icon(imageVector = Icons.Filled.Clear, contentDescription = null)
+                    }
                 }
             )
 
