@@ -71,13 +71,11 @@ fun ContentComponent(
     note: Note,
     onTitleChanged: (String) -> Unit,
     onTextChanged: (String) -> Unit,
-    onSaveClicked: (Context) -> Unit,
+    onSaveClicked: (Context, ActivityResultLauncher<String>) -> Unit,
     onBackClicked: () -> Unit,
     onFavouriteClicked: () -> Unit,
     reminderDateChanged: (Long) -> Unit,
     reminderRemoved: (Context) -> Unit,
-    requestPermissions: (Context, ActivityResultLauncher<String>) -> Unit,
-    isPermissionsGranted: Boolean
 ) {
     val context = LocalContext.current
 
@@ -93,7 +91,7 @@ fun ContentComponent(
 
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = Date().time,
-        selectableDates =  FutureOrPresentSelectableDates
+        selectableDates = FutureOrPresentSelectableDates
     )
 
     val currentTime = Calendar.getInstance()
@@ -119,14 +117,12 @@ fun ContentComponent(
                 },
                 actions = {
                     IconButton(onClick = {
-                        if (note.id != null){
-                            if (isPermissionsGranted) {
-                                if (note.reminderDate != null)
-                                    reminderRemoved(context)
-                                else {
-                                    showDatePicker = true
-                                }
-                            } else requestPermissions(context, notificationLauncher)
+                        if (note.id != null) {
+                            if (note.reminderDate != null)
+                                reminderRemoved(context)
+                            else {
+                                showDatePicker = true
+                            }
                         }
                     }) {
                         Icon(
@@ -142,7 +138,7 @@ fun ContentComponent(
                             contentDescription = null
                         )
                     }
-                    IconButton(onClick = { onSaveClicked(context) }) {
+                    IconButton(onClick = { onSaveClicked(context, notificationLauncher) }) {
                         Icon(
                             imageVector = Icons.Default.Done,
                             contentDescription = null
@@ -153,31 +149,6 @@ fun ContentComponent(
         }
 
     ) { paddingValues ->
-
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-        ) {
-
-            NoteTitle(
-                noteTitle = note.title,
-                onTitleChanged = onTitleChanged
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            NoteInfo(
-                charCount = note.text.length,
-                lastUpdate = note.lastUpdate,
-                reminderDate = note.reminderDate
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-            NoteText(
-                noteText = note.text,
-                onTextChanged = onTextChanged
-            )
-        }
 
         if (showDatePicker) {
             DatePickerModal(
@@ -193,8 +164,7 @@ fun ContentComponent(
                 datePickerState = datePickerState
             )
         }
-
-        if (showTimePicker) {
+        else if (showTimePicker) {
             TimePickerModal(
                 onTimeSelected = {
                     showTimePicker = false
@@ -212,6 +182,32 @@ fun ContentComponent(
                 },
                 timePickerState = timePickerState
             )
+        }
+        else {
+            Column(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
+            ) {
+
+                NoteTitle(
+                    noteTitle = note.title,
+                    onTitleChanged = onTitleChanged
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                NoteInfo(
+                    charCount = note.text.length,
+                    lastUpdate = note.lastUpdate,
+                    reminderDate = note.reminderDate
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+                NoteText(
+                    noteText = note.text,
+                    onTextChanged = onTextChanged
+                )
+            }
         }
     }
 
@@ -258,10 +254,11 @@ fun TimePickerModal(
     onDismiss: () -> Unit,
     timePickerState: TimePickerState
 ) {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background)
-    ){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         Column(
             modifier = Modifier
                 .align(Alignment.Center),
@@ -306,7 +303,7 @@ fun NoteTitle(
 fun NoteInfo(
     charCount: Int,
     lastUpdate: Long?,
-    reminderDate : Long?
+    reminderDate: Long?
 ) {
 
     val updateString = dateToString(lastUpdate).takeIf { it.isNotBlank() }?.plus(" | ") ?: ""
