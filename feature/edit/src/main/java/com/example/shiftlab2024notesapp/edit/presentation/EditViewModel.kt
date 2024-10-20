@@ -41,6 +41,21 @@ class EditViewModel(
     private var isNotificationPermissionGranted by mutableStateOf(false)
     private var isExactAlarmPermissionGranted by mutableStateOf(false)
 
+    init {
+        getCurrentReminder()
+    }
+
+    private fun getCurrentReminder() {
+        val reminder = if (note.reminderDate == null)
+            null
+        else {
+            if (note.reminderDate!! < System.currentTimeMillis())
+                null
+            else note.reminderDate
+        }
+        reminderTime.value = reminder
+    }
+
     fun changeTitle(value: String) {
         title.value = value
         showNote()
