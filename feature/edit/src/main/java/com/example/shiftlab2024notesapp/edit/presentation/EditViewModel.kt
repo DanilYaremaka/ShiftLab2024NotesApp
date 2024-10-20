@@ -156,7 +156,7 @@ class EditViewModel(
         alarmManager.setExact(
             AlarmManager.RTC_WAKEUP,
             reminderTime.value!!,
-            getPendingIntent(context, note.id!!, note.title)
+            getPendingIntent(context, note.id!!, note.id.toString())
         )
     }
 
