@@ -109,7 +109,7 @@ class EditViewModel(
         reminderTime.value = null
         if (note.reminderDate != null) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            alarmManager.cancel(getPendingIntent(context, note.id!!, note.id.toString()))
+            alarmManager.cancel(getPendingIntent(context, note.id!!, note.title))
         }
         showNote()
     }
@@ -156,7 +156,7 @@ class EditViewModel(
         alarmManager.setExact(
             AlarmManager.RTC_WAKEUP,
             reminderTime.value!!,
-            getPendingIntent(context, note.id!!, note.id.toString())
+            getPendingIntent(context, note.id!!, note.title)
         )
     }
 
