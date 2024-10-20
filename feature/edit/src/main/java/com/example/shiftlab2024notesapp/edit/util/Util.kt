@@ -22,13 +22,27 @@ object FutureOrPresentSelectableDates: SelectableDates {
         cal.set(Calendar.MINUTE, 0)
         cal.set(Calendar.SECOND, 0)
         cal.set(Calendar.MILLISECOND, 0)
-        return utcTimeMillis >= cal.timeInMillis
+        return utcTimeMillis >= getCurrentDayInMillis()
     }
 
     @ExperimentalMaterial3Api
     override fun isSelectableYear(year: Int): Boolean {
         return year >= LocalDate.now().year
     }
+}
+
+fun getCurrentDayInMillis(): Long {
+    val cal = Calendar.getInstance()
+    cal.timeInMillis = System.currentTimeMillis()
+    cal.set(Calendar.HOUR_OF_DAY, 0)
+    cal.set(Calendar.MINUTE, 0)
+    cal.set(Calendar.SECOND, 0)
+    cal.set(Calendar.MILLISECOND, 0)
+    return cal.timeInMillis
+}
+
+fun getCurrentTimeInMillis(): Long {
+    return System.currentTimeMillis()
 }
 
 fun dateToString(long: Long?): String {
