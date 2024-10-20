@@ -1,13 +1,10 @@
 package com.example.shiftlab2024notesapp.edit.ui
 
 import android.content.Context
-import android.os.Build
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -68,7 +65,6 @@ import com.example.shiftlab2024notesapp.shared.entity.Note
 import java.util.Calendar
 import java.util.Date
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentComponent(
@@ -92,7 +88,6 @@ fun ContentComponent(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             showDatePicker = isGranted
-            Log.d("content", isGranted.toString())
         }
     )
 
@@ -133,7 +128,6 @@ fun ContentComponent(
                                 }
                             } else requestPermissions(context, notificationLauncher)
                         }
-                        Log.d("content", "Button clicked, permis from vm $isPermissionsGranted")
                     }) {
                         Icon(
                             imageVector = if (note.reminderDate != null) Icons.Filled.Notifications

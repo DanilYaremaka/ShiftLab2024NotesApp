@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,10 +40,6 @@ class EditViewModel(
     private var isNotificationPermissionGranted by mutableStateOf(false)
     private var isExactAlarmPermissionGranted by mutableStateOf(false)
 
-    init {
-
-    }
-
     fun changeTitle(value: String) {
         title.value = value
         showNote()
@@ -62,7 +57,6 @@ class EditViewModel(
 
     fun showNote() {
         val permissionsGranted = isNotificationPermissionGranted && isExactAlarmPermissionGranted
-        Log.d("NoteState", permissionsGranted.toString())
         _state.value = EditState.Content(
             note.copy(
                 title = title.value,
@@ -85,7 +79,6 @@ class EditViewModel(
 
         viewModelScope.launch {
             try {
-                Log.d("Insert", reminderTime.value.toString())
                 insertNoteUseCase(
                     note.copy(
                         text = text.value,
@@ -116,7 +109,7 @@ class EditViewModel(
         reminderTime.value = null
         if (note.reminderDate != null) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            alarmManager.cancel(getPendingIntent(context, note.id!!, note.title))
+            alarmManager.cancel(getPendingIntent(context, note.id!!, note.id.toString()))
         }
         showNote()
     }
