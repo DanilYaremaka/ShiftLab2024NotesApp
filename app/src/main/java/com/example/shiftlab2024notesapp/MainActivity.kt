@@ -8,13 +8,16 @@ import com.example.resources.ui.ShiftLab2024NotesAppTheme
 import com.example.shiftlab2024notesapp.ui.MainScreen
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContent {
             ShiftLab2024NotesAppTheme {
                 MainScreen()
             }
         }
+
     }
 }

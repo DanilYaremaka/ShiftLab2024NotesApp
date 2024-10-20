@@ -1,5 +1,6 @@
 package com.example.shiftlab2024notesapp.notes.presentation
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,9 +22,47 @@ class NotesViewModel(
     val state: StateFlow<NotesState> = _state
 
     private val notes = mutableStateOf<List<Note>>(emptyList())
+    private val isShowFavourite = mutableStateOf(false)
+    private val searchQuery = mutableStateOf("")
+
 
     init {
         loadNotes()
+    }
+
+    fun changeSearchQuery(newValue: String) {
+        searchQuery.value = newValue
+        Log.d("notesVM", "$newValue, ${searchQuery.value}")
+        _state.value = NotesState.Content(
+            notes = getList(),
+            isShowFavourite = isShowFavourite.value,
+            searchQuery = searchQuery.value
+        )
+    }
+
+    fun changeShowFavouriteState() {
+        isShowFavourite.value = !isShowFavourite.value
+        getNotes()
+    }
+
+    private fun getFavourite(before: List<Note>): List<Note> {
+        return if (isShowFavourite.value) before.filter {
+            it.isFavourite
+        } else before
+    }
+
+    private fun getSearchQuery(before: List<Note>): List<Note> {
+        return if (searchQuery.value != "") before.filter {
+            it.title.contains(searchQuery.value) || it.text.contains(searchQuery.value)
+        } else before
+    }
+
+    private fun getList(): List<Note> {
+        var result = getFavourite(notes.value)
+
+        result = getSearchQuery(result)
+
+        return result
     }
 
     private fun loadNotes() {
@@ -39,7 +78,11 @@ class NotesViewModel(
         viewModelScope.launch {
             try {
                 notes.value = getNotesUseCase()
-                _state.value = NotesState.Content(notes.value)
+                _state.value = NotesState.Content(
+                    notes = getList(),
+                    isShowFavourite = isShowFavourite.value,
+                    searchQuery = searchQuery.value
+                )
             } catch (ce: CancellationException) {
                 throw ce
             } catch (ex: Exception) {
@@ -67,7 +110,11 @@ class NotesViewModel(
         }
         val oldList = state.notes.toMutableList()
         oldList.remove(note)
-        _state.value = NotesState.Content(notes = oldList)
+        _state.value = NotesState.Content(
+            notes = oldList,
+            isShowFavourite = isShowFavourite.value,
+            searchQuery = searchQuery.value
+        )
     }
 
     fun openNote(note: Note?) {

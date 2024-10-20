@@ -6,6 +6,10 @@ sealed interface NotesState {
 
     data object Initial: NotesState
     data object Loading: NotesState
-    data class Content(val notes: List<Note>): NotesState
+    data class Content(
+        val notes: List<Note>,
+        val isShowFavourite: Boolean,
+        val searchQuery: String
+        ): NotesState
     data class Failure(val message: String): NotesState
 }

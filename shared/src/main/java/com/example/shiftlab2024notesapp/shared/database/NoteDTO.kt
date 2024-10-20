@@ -9,5 +9,7 @@ data class NoteDTO(
     val id: Int? = null,
     val title: String = "",
     val text: String = "",
-    val isFavourite: Boolean = false
+    val isFavourite: Boolean = false,
+    val lastUpdate: Long? = null,
+    val reminderDate: Long? = null
 )

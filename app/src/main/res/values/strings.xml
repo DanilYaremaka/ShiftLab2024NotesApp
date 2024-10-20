@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ShiftLab2024NotesApp</string>
+    <string name="permission_warning">вы не сможете получать напоминания, если не дадите разрешение</string>
 </resources>

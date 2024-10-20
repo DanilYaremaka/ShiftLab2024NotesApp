@@ -8,7 +8,7 @@ import com.example.shiftlab2024notesapp.shared.database.NoteDTO
 
 @Database(
     entities = [(NoteDTO::class)],
-    version = 4,
+    version = 6,
     exportSchema = false
 )
 abstract class NotesRoomDataBase: RoomDatabase() {

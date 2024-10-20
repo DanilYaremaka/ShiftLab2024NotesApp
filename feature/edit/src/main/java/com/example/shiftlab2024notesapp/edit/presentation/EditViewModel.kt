@@ -1,20 +1,33 @@
 package com.example.shiftlab2024notesapp.edit.presentation
 
+import android.Manifest
+import android.app.AlarmManager
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.provider.Settings
+import androidx.activity.result.ActivityResultLauncher
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shiftlab2024notesapp.edit.domain.usecase.InsertNoteUseCase
+import com.example.shiftlab2024notesapp.edit.util.getPendingIntent
 import com.example.shiftlab2024notesapp.shared.entity.Note
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.Date
 import kotlin.coroutines.cancellation.CancellationException
 
 class EditViewModel(
     private val note: Note,
     private val insertNoteUseCase: InsertNoteUseCase,
-    private val router: EditRouter
-): ViewModel() {
+    private val router: EditRouter,
+) : ViewModel() {
 
     private val _state = MutableStateFlow<EditState>(EditState.Initial)
     val state: StateFlow<EditState> = _state
@@ -22,6 +35,10 @@ class EditViewModel(
     private val title = mutableStateOf(note.title)
     private val text = mutableStateOf(note.text)
     private val isFavourite = mutableStateOf(note.isFavourite)
+    private val reminderTime = mutableStateOf(note.reminderDate)
+
+    private var isNotificationPermissionGranted by mutableStateOf(false)
+    private var isExactAlarmPermissionGranted by mutableStateOf(false)
 
     fun changeTitle(value: String) {
         title.value = value
@@ -39,26 +56,38 @@ class EditViewModel(
     }
 
     fun showNote() {
-        _state.value = EditState.Content(note.copy(
-            title = title.value,
-            text = text.value,
-            isFavourite = isFavourite.value
-        ))
+        val permissionsGranted = isNotificationPermissionGranted && isExactAlarmPermissionGranted
+        _state.value = EditState.Content(
+            note.copy(
+                title = title.value,
+                text = text.value,
+                isFavourite = isFavourite.value,
+                reminderDate = reminderTime.value
+            ),
+            permissionsGranted
+        )
     }
 
-    fun insertNote() {
+    fun insertNote(context: Context) {
         val state = state.value
         if (state !is EditState.Content) return
 
-        if (validate()) return
+        if (notValidated()) return
+
+        if (reminderTime.value != null && isExactAlarmPermissionGranted && isNotificationPermissionGranted)
+            scheduleReminder(context)
 
         viewModelScope.launch {
             try {
-                insertNoteUseCase(note.copy(
-                    text = text.value,
-                    title = title.value,
-                    isFavourite = isFavourite.value
-                ))
+                insertNoteUseCase(
+                    note.copy(
+                        text = text.value,
+                        title = title.value,
+                        isFavourite = isFavourite.value,
+                        lastUpdate = getCurrentDate(),
+                        reminderDate = reminderTime.value
+                    )
+                )
                 closeNote()
             } catch (ce: CancellationException) {
                 throw ce
@@ -68,7 +97,74 @@ class EditViewModel(
         }
     }
 
-    private fun validate(): Boolean {
+    fun createReminder(newValue: Long) {
+        if (note.id == null)
+            return
+
+        reminderTime.value = newValue
+        showNote()
+    }
+
+    fun removeReminder(context: Context) {
+        reminderTime.value = null
+        if (note.reminderDate != null) {
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager.cancel(getPendingIntent(context, note.id!!, note.id.toString()))
+        }
+        showNote()
+    }
+
+    fun requestPermissions(context: Context, notificationLauncher: ActivityResultLauncher<String>) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        if (!isExactAlarmPermissionGranted(alarmManager)) {
+            requestExactAlarmPermission(context, alarmManager)
+        } else isExactAlarmPermissionGranted = true
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                isNotificationPermissionGranted = true
+            }
+        } else {
+            isNotificationPermissionGranted = true
+        }
+        showNote()
+    }
+
+    private fun requestExactAlarmPermission(context: Context, alarmManager: AlarmManager) {
+        if (!alarmManager.canScheduleExactAlarms()) {
+            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+            context.startActivity(intent)
+        } else {
+            isExactAlarmPermissionGranted = true
+        }
+    }
+
+    private fun isExactAlarmPermissionGranted(alarmManager: AlarmManager): Boolean {
+        return alarmManager.canScheduleExactAlarms()
+    }
+
+    private fun scheduleReminder(context: Context) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        alarmManager.setExact(
+            AlarmManager.RTC_WAKEUP,
+            reminderTime.value!!,
+            getPendingIntent(context, note.id!!, note.id.toString())
+        )
+    }
+
+    private fun getCurrentDate(): Long {
+        return Date().time
+    }
+
+    private fun notValidated(): Boolean {
         return (text.value == "" && title.value == "")
     }
 
