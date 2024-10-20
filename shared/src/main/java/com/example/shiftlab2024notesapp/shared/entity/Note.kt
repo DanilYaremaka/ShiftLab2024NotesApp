@@ -8,6 +8,9 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Parcelize
 @Serializable
@@ -15,8 +18,15 @@ data class Note(
     val id: Int? = null,
     val title: String = "",
     val text: String = "",
-    val isFavourite: Boolean = false
+    val isFavourite: Boolean = false,
+    val lastUpdate: Long? = null
 ) : Parcelable {
+
+    fun dateToString(): String {
+        val sdf = SimpleDateFormat("dd MMM HH:mm", Locale.getDefault())
+        return if (lastUpdate == null) ""
+        else sdf.format(Date(lastUpdate))
+    }
 
     companion object {
 

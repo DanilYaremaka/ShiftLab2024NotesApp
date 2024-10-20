@@ -8,7 +8,7 @@ import com.example.shiftlab2024notesapp.shared.database.NoteDTO
 @Dao
 interface NoteDao {
 
-    @Query("SELECT * FROM notes ORDER BY id desc")
+    @Query("SELECT * FROM notes ORDER BY lastUpdate desc")
     suspend fun getNotes(): List<NoteDTO>
 
     @Delete

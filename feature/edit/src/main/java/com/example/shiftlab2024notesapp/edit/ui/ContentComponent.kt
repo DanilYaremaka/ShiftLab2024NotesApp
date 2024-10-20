@@ -85,7 +85,10 @@ fun ContentComponent(
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            NoteInfo(charCount = note.text.length)
+            NoteInfo(
+                charCount = note.text.length,
+                lastUpdate = note.dateToString()
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
             NoteText(
@@ -122,9 +125,15 @@ fun NoteTitle(
 }
 
 @Composable
-fun NoteInfo(charCount: Int) {
+fun NoteInfo(
+    charCount: Int,
+    lastUpdate: String?
+) {
+    val dateInfo = if (lastUpdate.isNullOrBlank()) ""
+    else "$lastUpdate | "
+
     Text(
-        text = pluralStringResource(
+        text = dateInfo  + pluralStringResource(
             id = R.plurals.chars_count,
             count = charCount,
             charCount

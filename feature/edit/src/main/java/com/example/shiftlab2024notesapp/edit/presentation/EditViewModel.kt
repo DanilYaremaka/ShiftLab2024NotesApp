@@ -8,6 +8,7 @@ import com.example.shiftlab2024notesapp.shared.entity.Note
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.Date
 import kotlin.coroutines.cancellation.CancellationException
 
 class EditViewModel(
@@ -57,7 +58,8 @@ class EditViewModel(
                 insertNoteUseCase(note.copy(
                     text = text.value,
                     title = title.value,
-                    isFavourite = isFavourite.value
+                    isFavourite = isFavourite.value,
+                    lastUpdate = getCurrentDate()
                 ))
                 closeNote()
             } catch (ce: CancellationException) {
@@ -66,6 +68,10 @@ class EditViewModel(
                 _state.value = EditState.Failure(ex.localizedMessage.orEmpty())
             }
         }
+    }
+
+    private fun getCurrentDate(): Long {
+        return Date().time
     }
 
     private fun validate(): Boolean {
