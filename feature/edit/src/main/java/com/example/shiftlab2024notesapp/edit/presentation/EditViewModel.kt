@@ -78,15 +78,13 @@ class EditViewModel(
     }
 
     fun showNote() {
-        val permissionsGranted = isNotificationPermissionGranted && isExactAlarmPermissionGranted
         _state.value = EditState.Content(
             note.copy(
                 title = title.value,
                 text = text.value,
                 isFavourite = isFavourite.value,
                 reminderDate = reminderTime.value
-            ),
-            permissionsGranted
+            )
         )
     }
 
@@ -98,13 +96,19 @@ class EditViewModel(
 
         if (reminderTime.value != null && note.reminderDate == null) {
             requestPermissions(context, notificationLauncher)
-            if (isExactAlarmPermissionGranted && isNotificationPermissionGranted)
+            if (isPermissionsGranted())
                 scheduleReminder(context)
+            else reminderTime.value = null
         }
 
-        updateReminderTitle(context)
+        if (note.reminderDate != null)
+            updateReminderTitle(context)
 
         insertNote()
+    }
+
+    private fun isPermissionsGranted(): Boolean {
+        return isExactAlarmPermissionGranted && isNotificationPermissionGranted
     }
 
     fun insertNote() {
@@ -149,7 +153,7 @@ class EditViewModel(
         }
     }
 
-    fun requestPermissions(context: Context, notificationLauncher: ActivityResultLauncher<String>) {
+    private fun requestPermissions(context: Context, notificationLauncher: ActivityResultLauncher<String>) {
         isNotificationPermissionGranted = true
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
