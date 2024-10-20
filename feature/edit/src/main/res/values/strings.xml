@@ -8,4 +8,10 @@
     </plurals>
     <string name="title_hint">Заголовок</string>
     <string name="text">Введите текст заметки</string>
+    <string name="new_reminder">Новое напоминание</string>
+    <string name="reminder_description">Канал для напоминаний</string>
+    <string name="reminder_chanel_id">reminders</string>
+    <string name="reminder_chanel_name">Напоминания</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="cancel">Отменить</string>
 </resources>

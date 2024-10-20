@@ -9,7 +9,8 @@ class NoteConverter {
         title = noteDTO.title,
         text = noteDTO.text,
         isFavourite = noteDTO.isFavourite,
-        lastUpdate = noteDTO.lastUpdate
+        lastUpdate = noteDTO.lastUpdate,
+        reminderDate = noteDTO.reminderDate
     )
 
     fun convertToDTO(note: Note) = NoteDTO(
@@ -17,6 +18,7 @@ class NoteConverter {
         title = note.title,
         text = note.text,
         isFavourite = note.isFavourite,
-        lastUpdate = note.lastUpdate
+        lastUpdate = note.lastUpdate,
+        reminderDate = note.reminderDate
     )
 }

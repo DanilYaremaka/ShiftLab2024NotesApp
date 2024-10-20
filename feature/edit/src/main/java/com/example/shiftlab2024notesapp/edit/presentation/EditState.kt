@@ -5,6 +5,6 @@ import com.example.shiftlab2024notesapp.shared.entity.Note
 sealed interface EditState {
 
     data object Initial: EditState
-    data class Content(val note: Note): EditState
+    data class Content(val note: Note, val isPermissionsGranted: Boolean): EditState
     data class Failure(val message: String): EditState
 }
