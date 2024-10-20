@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -114,6 +115,7 @@ class EditViewModel(
         showNote()
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     fun requestPermissions(context: Context, notificationLauncher: ActivityResultLauncher<String>) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -137,6 +139,7 @@ class EditViewModel(
         showNote()
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun requestExactAlarmPermission(context: Context, alarmManager: AlarmManager) {
         if (!alarmManager.canScheduleExactAlarms()) {
             val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
@@ -146,6 +149,7 @@ class EditViewModel(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun isExactAlarmPermissionGranted(alarmManager: AlarmManager): Boolean {
         return alarmManager.canScheduleExactAlarms()
     }
