@@ -28,6 +28,5 @@ min SDK = 31, Kotlin, Clean Architecture, multi-module, MVI + JetPack Compose, D
 <img src="https://github.com/user-attachments/assets/93b48d54-9be0-4412-803b-5be6eb4e7ba4" width="405" height="848">
 <img src="https://github.com/user-attachments/assets/76f0ef1d-7983-45f2-bd74-a1ee75971bed" width="405" height="848">
 <img src="https://github.com/user-attachments/assets/3a302eb0-8db9-40bb-baef-553fe30d586e" width="405" height="848">
-<img src="https://github.com/user-attachments/assets/a97548fc-f07e-4f62-9789-9327476bbdb6" width="405" height="848">
 <img src="https://github.com/user-attachments/assets/79960475-0fcc-4de7-93e3-d22d9abf6ab4" width="405" height="848">
 <img src="https://github.com/user-attachments/assets/619a3bf9-92cc-4c20-bf38-5b092e8d8dd7" width="405" height="848">
